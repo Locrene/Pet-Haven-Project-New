@@ -2,34 +2,30 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-function Login({ setIsLoggedIn }) {
+function Login({ setIsLoggedIn, setUserName }) {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = () => {
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Please enter email and password");
       return;
     }
 
     setError("");
     setIsLoggedIn(true);
-    navigate("/Landing2");
+    setUserName(username);
+    navigate("/");
   };
 
   return (
     <div>
-
-      {/* NAVBAR */}
       <Navbar variant="public" />
 
-      {/* LOGIN */}
       <div className="login-container">
-
-        {/* BACK BUTTON */}
         <button
           className="back-btn"
           onClick={() => navigate("/")}
@@ -44,18 +40,15 @@ function Login({ setIsLoggedIn }) {
             Cebu City Pet Adoption
           </p>
 
-          {/* ERROR */}
           {error && <p className="error">{error}</p>}
 
-          {/* EMAIL */}
           <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
 
-          {/* PASSWORD */}
           <input
             type="password"
             placeholder="Enter your password"
@@ -63,21 +56,15 @@ function Login({ setIsLoggedIn }) {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          {/* LOGIN BUTTON */}
           <button onClick={handleLogin}>Log In</button>
 
-          
-          {/* FORGOT */}
           <p className="forgot">Forgot password?</p>
 
-
-          {/* REGISTER */}
           <p>
             Don’t have an account? <Link to="/register">Sign Up</Link>
           </p>
         </div>
       </div>
-
     </div>
   );
 }

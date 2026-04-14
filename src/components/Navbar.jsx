@@ -4,6 +4,8 @@ function Navbar({ isLoggedIn, variant }) {
   return (
     <div className="navbar">
       <h2>PawHaven</h2>
+      
+      
 
       <ul>
         {isLoggedIn && variant !== "public" && (

@@ -1,41 +1,47 @@
 import "../styles/app.css";
 import { useNavigate } from "react-router-dom";
 
-
-
-function Landing() {
+function Landing({ isLoggedIn, userName }) {
   const navigate = useNavigate();
 
-const pets = [
-  {
-    id: 1,
-    name: "Maya",
-    age: "1 year",
-    location: "Danao",
-    image: "/images/dog1.jpg",
-  },
-  {
-    id: 2,
-    name: "Leo",
-    age: "3 years",
-    location: "Marigondon",
-    image: "/images/dog2.jpg",
-  },
-  {
-    id: 3,
-    name: "Luca",
-    age: "2 years",
-    location: "Tisa",
-    image: "/images/dog3.jpg",
-  },
-  {
-    id: 4,
-    name: "Browny",
-    age: "5 years",
-    location: "Labangon",
-    image: "/images/dog4.jpg",
-  },
-];
+  const pets = [
+    {
+      id: 1,
+      name: "Maya",
+      age: "1 year",
+      location: "Danao",
+      image: "/images/dog1.jpg",
+    },
+    {
+      id: 2,
+      name: "Leo",
+      age: "3 years",
+      location: "Marigondon",
+      image: "/images/dog2.jpg",
+    },
+    {
+      id: 3,
+      name: "Luca",
+      age: "2 years",
+      location: "Tisa",
+      image: "/images/dog3.jpg",
+    },
+    {
+      id: 4,
+      name: "Browny",
+      age: "5 years",
+      location: "Labangon",
+      image: "/images/dog4.jpg",
+    },
+  ];
+
+  const handleProtectedNavigation = (path) => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    navigate(path);
+  };
 
   return (
     <div className="home-page">
@@ -48,15 +54,32 @@ const pets = [
           </div>
         </div>
 
+
+        {/*"handleProtectNavigation makes it when the user is not yet logged in but they clicked it, it proceeds to login page*/} 
         <ul className="nav-links">
-          <li><a href="/">Dashboard</a></li>
-          <li><a href="/adoption">Adoption</a></li>
-          <li><a href="/missing-pets">Missing Pets</a></li>
-          <li><a href="/how-it-works">How It Works</a></li>
-          
+          <li onClick={() => handleProtectedNavigation("/dashboard")}>Dashboard</li>
+          <li onClick={() => handleProtectedNavigation("/adoption")}>Adoption</li>
+          <li onClick={() => handleProtectedNavigation("/missing-pets")}>Missing Pets</li>
+          <li onClick={() => handleProtectedNavigation("/how-it-works")}>How It Works</li>
         </ul>
 
-        <button className="signup-btn"> Profile</button>
+
+
+        {/* When user is not logged in, they cannot proceed to another page. but when logged in, welcome message is displayed */}
+        {!isLoggedIn ? (
+          <button
+            className="signup-btn"
+            onClick={() => navigate("/login")}
+          >
+            Sign Up
+          </button>
+        ) : (
+          <div className="welcome-text">
+            Welcome, {userName}
+          </div>
+        )}
+
+
       </nav>
 
       <header className="hero-section">
@@ -102,7 +125,9 @@ const pets = [
                   <span>{pet.age}</span>
                   <span>{pet.location}</span>
                 </div>
-                <button onClick={() => navigate("/pet")}>View Details</button>
+                <button onClick={() => handleProtectedNavigation("/pet")}>
+                  View Details
+                </button>
               </div>
             </div>
           ))}

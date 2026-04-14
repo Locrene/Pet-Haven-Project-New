@@ -489,3 +489,11 @@ body {
 .feed-filters button:hover {
   background: #163d63;
 }
+
+.welcome-text {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: transparent;
+  padding: 10px 14px;
+}
