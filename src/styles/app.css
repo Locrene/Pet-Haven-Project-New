@@ -1191,3 +1191,588 @@ body {
     padding: 15px 20px;
   }
 }
+
+/* ===== PETCONNECT LANDING PAGE STYLES ===== */
+
+.petconnect-landing {
+  width: 100%;
+  background-color: #f5f8fc;
+}
+
+/* Hero Section */
+.petconnect-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, #f5f8fc 0%, #e8f2f9 100%);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.petconnect-hero-content {
+  flex: 1;
+}
+
+.petconnect-hero-content h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #1a3d5f;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.petconnect-hero-content p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.petconnect-search {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.petconnect-search input {
+  flex: 1;
+  padding: 14px 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.petconnect-search button {
+  padding: 14px 28px;
+  background: #2c5282;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.petconnect-search button:hover {
+  background: #1e3a52;
+}
+
+.petconnect-hero-image {
+  flex: 1;
+}
+
+.petconnect-hero-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+/* Stats Section */
+.petconnect-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 40px;
+  background: white;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.petconnect-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.petconnect-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(44, 82, 130, 0.1);
+  border-radius: 12px;
+}
+
+.stat-content h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c5282;
+  margin: 0;
+}
+
+.stat-content p {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+/* Featured Pets Section */
+.petconnect-featured {
+  padding: 60px 40px;
+  background: white;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.petconnect-featured h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a3d5f;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.petconnect-pet-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.petconnect-pet-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.petconnect-pet-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.petconnect-pet-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.petconnect-pet-info {
+  padding: 16px;
+}
+
+.petconnect-pet-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a3d5f;
+  margin: 0 0 8px 0;
+}
+
+.petconnect-pet-info p {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 10px 16px;
+  background: #2c5282;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #1e3a52;
+}
+
+/* Features Section */
+.petconnect-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 60px 40px;
+  background: white;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 24px;
+}
+
+.feature-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.feature-item h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a3d5f;
+  margin-bottom: 12px;
+}
+
+.feature-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* How It Works Section */
+.petconnect-how-it-works {
+  padding: 60px 40px;
+  background: #f8f9fa;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.petconnect-how-it-works h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a3d5f;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.petconnect-how-it-works > p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.petconnect-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.step-item {
+  text-align: center;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.step-item:hover {
+  transform: translateY(-4px);
+}
+
+.step-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.step-item h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a3d5f;
+  margin-bottom: 12px;
+}
+
+.step-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Testimonials Section */
+.petconnect-testimonials {
+  padding: 60px 40px;
+  background: white;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.petconnect-testimonials h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a3d5f;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.petconnect-testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.testimonial-box {
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #2c5282;
+}
+
+.testimonial-box p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testimonial-author img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-info strong {
+  display: block;
+  color: #1a3d5f;
+  margin-bottom: 4px;
+}
+
+.author-info p {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+/* Community Section */
+.petconnect-community {
+  padding: 60px 40px;
+  background: #f8f9fa;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.petconnect-community h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a3d5f;
+  margin-bottom: 12px;
+}
+
+.petconnect-community > p {
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 16px;
+}
+
+.community-map {
+  margin-bottom: 32px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.community-map img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.community-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 12px 32px;
+  background: #2c5282;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1e3a52;
+}
+
+.btn-outline {
+  padding: 12px 32px;
+  background: transparent;
+  color: #2c5282;
+  border: 2px solid #2c5282;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: #2c5282;
+  color: white;
+}
+
+/* Footer */
+.petconnect-footer {
+  background: linear-gradient(135deg, #1a3d5f 0%, #2c5282 100%);
+  color: white;
+  padding: 40px;
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-icon {
+  font-size: 32px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.brand-info h3 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.brand-info p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.copyright {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: auto;
+}
+
+.footer-col h4 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col li {
+  margin-bottom: 8px;
+}
+
+.footer-col a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s ease;
+}
+
+.footer-col a:hover {
+  color: white;
+}
+
+.footer-social {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-social a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  transition: opacity 0.2s ease;
+}
+
+.footer-social a:hover {
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .petconnect-hero {
+    flex-direction: column;
+    gap: 40px;
+    padding: 60px 30px;
+  }
+
+  .petconnect-pet-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .petconnect-features,
+  .petconnect-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .petconnect-hero-content h1 {
+    font-size: 36px;
+  }
+
+  .petconnect-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .petconnect-pet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .petconnect-features,
+  .petconnect-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .petconnect-testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .community-buttons {
+    flex-direction: column;
+  }
+
+  .community-buttons .btn-primary,
+  .community-buttons .btn-outline {
+    width: 100%;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .petconnect-hero-content h1 {
+    font-size: 28px;
+  }
+
+  .petconnect-featured h2,
+  .petconnect-how-it-works h2,
+  .petconnect-testimonials h2,
+  .petconnect-community h2 {
+    font-size: 24px;
+  }
+
+  .petconnect-pet-grid {
+    grid-template-columns: 1fr;
+  }
+}
