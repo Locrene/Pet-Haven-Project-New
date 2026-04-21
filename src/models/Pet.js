@@ -1,21 +1,15 @@
 class Pet {
-  constructor(id, name, age, location, breed, status, description, image) {
+  constructor(id, name, age, location, breed, status, description, image, owner = {}, type = "Dog") {
     this.id = id;
     this.name = name;
     this.age = age;
     this.location = location;
     this.breed = breed;
-    this.status = status; // adopted / available / missing
+    this.status = status;
     this.description = description;
     this.image = image;
-  }
-
-  markAdopted() {
-    this.status = "adopted";
-  }
-
-  markMissing() {
-    this.status = "missing";
+    this.owner = owner;
+    this.type = type;
   }
 }
 
