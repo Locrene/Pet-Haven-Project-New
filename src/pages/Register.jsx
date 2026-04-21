@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 
 function Register() {
   const navigate = useNavigate();
@@ -46,11 +45,6 @@ function Register() {
 
   return (
     <div>
-
-      {/* NAVBAR */}
-      <Navbar variant="public" />
-
-      {/* REGISTER FORM */}
       <div className="login-container">
 
         {/* BACK BUTTON */}

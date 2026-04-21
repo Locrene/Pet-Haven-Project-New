@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
 import PetService from "../services/PetService";
 
 import {
@@ -38,9 +37,6 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-
-      <Sidebar />
-
       <div className="main-content">
 
         <div className="dashboard-header">

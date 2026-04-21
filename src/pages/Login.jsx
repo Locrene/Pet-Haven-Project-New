@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 
 function Login({ setIsLoggedIn, setUserName }) {
   const navigate = useNavigate();
@@ -23,8 +22,6 @@ function Login({ setIsLoggedIn, setUserName }) {
 
   return (
     <div>
-      <Navbar variant="public" />
-
       <div className="login-container">
         <button
           className="back-btn"

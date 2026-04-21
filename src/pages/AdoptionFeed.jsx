@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
 import PetCard from "../components/PetCard";
 import PetService from "../services/PetService";
 
@@ -19,11 +18,6 @@ function AdoptionFeed() {
 
   return (
     <div className="dashboard">
-
-      {/* SIDEBAR */}
-      <Sidebar />
-
-      {/* MAIN */}
       <div className="main-content">
 
         {/* HEADER */}
