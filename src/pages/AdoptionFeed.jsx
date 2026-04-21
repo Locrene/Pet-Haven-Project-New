@@ -5,22 +5,28 @@ import PetService from "../services/PetService";
 function AdoptionFeed() {
   const [pets, setPets] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   useEffect(() => {
     const data = PetService.getAllPets();
     setPets(data);
   }, []);
 
-  // 🔍 FILTER
-  const filteredPets = pets.filter((pet) =>
-    pet.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredPets = pets.filter((pet) => {
+    const matchesSearch = pet.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesFilter =
+      selectedFilter === "" ||
+      pet.breed?.toLowerCase() === selectedFilter;
+
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="dashboard">
       <div className="main-content">
-
-        {/* HEADER */}
         <div className="dashboard-header">
           <h2>Adoption Feed</h2>
 
@@ -31,19 +37,32 @@ function AdoptionFeed() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <div className="user-box">👤 Admin</div>
           </div>
         </div>
 
-        {/* FILTER BUTTONS */}
         <div className="feed-filters">
-          <button>All</button>
-          <button>Dogs</button>
-          <button>Cats</button>
-          <button>Available</button>
+          <button
+            className={selectedFilter === "" ? "active-filter" : ""}
+            onClick={() => setSelectedFilter("")}
+          >
+            All
+          </button>
+
+          <button
+            className={selectedFilter === "dog" ? "active-filter" : ""}
+            onClick={() => setSelectedFilter("dog")}
+          >
+            Dogs
+          </button>
+
+          <button
+            className={selectedFilter === "cat" ? "active-filter" : ""}
+            onClick={() => setSelectedFilter("cat")}
+          >
+            Cats
+          </button>
         </div>
 
-        {/* PET GRID */}
         <div className="pet-grid">
           {filteredPets.length > 0 ? (
             filteredPets.map((pet) => (
@@ -53,7 +72,6 @@ function AdoptionFeed() {
             <p style={{ marginTop: "20px" }}>No pets found.</p>
           )}
         </div>
-
       </div>
     </div>
   );

@@ -776,67 +776,83 @@ body {
   font-weight: 500;
 }
 
-/* ================= DASHBOARD ================= */
-
-.dashboard {
-  display: flex;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 240px;
-  height: 100vh;
-  background: linear-gradient(180deg, #0b2c4d, #163d63);
-  color: white;
-  padding: 25px 20px;
-}
-
-.sidebar h2 {
-  margin-bottom: 30px;
-}
-
-.sidebar ul li {
-  padding: 12px;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.sidebar ul li:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-/* MAIN CONTENT */
+/* ================= DASHBOARD / ANALYTICS ================= */
 .main-content {
   flex: 1;
-  padding: 30px;
+  padding: 40px 60px;
   background: #f4f8fc;
+
 }
 
-/* HEADER */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 25px;
 }
 
-.header-right {
+.dashboard-header h2 {
+  color: #0b2c4d;
+  font-size: 32px;
+}
+
+.dashboard-stats {
   display: flex;
-  gap: 15px;
-  align-items: center;
+  gap: 20px;
+  margin-top: 25px;
+  flex-wrap: wrap;
 }
 
-.dashboard-header input {
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-}
-
-.user-box {
+.dashboard-card {
+  flex: 1;
+  min-width: 220px;
   background: white;
-  padding: 8px 15px;
-  border-radius: 20px;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
+.dashboard-card h3 {
+  font-size: 32px;
+  color: #0b2c4d;
+  margin-bottom: 10px;
+}
+
+.dashboard-card p {
+  color: #555;
+  font-size: 15px;
+}
+
+.dashboard-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.dashboard-box {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  margin-top: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.dashboard-box.large {
+  flex: 1;
+  min-width: 320px;
+}
+
+.dashboard-box h3 {
+  color: #0b2c4d;
+  margin-bottom: 10px;
+}
+
+.chart-box {
+  height: 300px;
+  margin-top: 10px;
+}
 /* STATS */
 .dashboard-stats {
   display: flex;
@@ -1190,4 +1206,27 @@ body {
   .footer-bottom {
     padding: 15px 20px;
   }
+}
+.feed-filters {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.feed-filters button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #0b2c4d;
+  color: white;
+  cursor: pointer;
+}
+
+.feed-filters button:hover {
+  background: #163d63;
+}
+
+.active-filter {
+  background-color: #2f80ed;
 }
