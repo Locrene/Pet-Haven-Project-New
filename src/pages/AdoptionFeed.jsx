@@ -12,17 +12,23 @@ function AdoptionFeed() {
     setPets(data);
   }, []);
 
-  const filteredPets = pets.filter((pet) => {
-    const matchesSearch = pet.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
 
-    const matchesFilter =
-      selectedFilter === "" ||
-      pet.breed?.toLowerCase() === selectedFilter;
+  // Search Function
+  const searchPets = pets.filter((pet) => {
+  const searchLower = search.toLowerCase();
 
-    return matchesSearch && matchesFilter;
-  });
+  const matchesSearch =
+    pet.name.toLowerCase().includes(searchLower) ||
+    pet.breed?.toLowerCase().includes(searchLower);
+
+
+  //Filter Option
+  const matchesFilter =
+    selectedFilter === "" ||
+    pet.breed?.toLowerCase() === selectedFilter;
+
+  return matchesSearch && matchesFilter;
+});
 
   return (
     <div className="dashboard">
@@ -31,7 +37,7 @@ function AdoptionFeed() {
           <h2>Adoption Feed</h2>
 
           <div className="header-right">
-            <input
+            <input className="adoption_input"
               type="text"
               placeholder="Search pets..."
               value={search}
@@ -64,8 +70,8 @@ function AdoptionFeed() {
         </div>
 
         <div className="pet-grid">
-          {filteredPets.length > 0 ? (
-            filteredPets.map((pet) => (
+          {searchPets.length > 0 ? (
+            searchPets.map((pet) => (
               <PetCard key={pet.id} pet={pet} />
             ))
           ) : (

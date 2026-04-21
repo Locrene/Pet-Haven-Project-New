@@ -18,4 +18,4 @@ const PetCard = ({ pet }) => {
   );
 };
 
-export default PetCard; // ✅ VERY IMPORTANT
+export default PetCard;

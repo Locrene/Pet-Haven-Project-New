@@ -19,9 +19,10 @@ function Dashboard() {
   const [missing, setMissing] = useState(0);
   const [adopted, setAdopted] = useState(0);
 
+
+  //displays the total data
   useEffect(() => {
     const data = PetService.getAllPets();
-
     setAvailable(data.filter(p => p.status === "available").length);
     setMissing(data.filter(p => p.status === "missing").length);
     setAdopted(data.filter(p => p.status === "adopted").length);
@@ -71,10 +72,10 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* CHARTS */}
+      {/* Charts */}
       <div className="dashboard-row">
 
-        {/* LINE CHART */}
+        {/* line*/}
         <div className="dashboard-box large">
           <h3>Adoption Overview</h3>
           <div className="chart-box">
@@ -94,7 +95,7 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* PIE CHART */}
+        {/* pie */}
         <div className="dashboard-box large">
           <h3>Pet Status Distribution</h3>
           <div className="chart-box">
