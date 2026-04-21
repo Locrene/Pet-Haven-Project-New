@@ -1319,6 +1319,12 @@ body {
   margin: 4px 0 0 0;
 }
 
+.stat-subtext {
+  font-size: 12px !important;
+  color: #999 !important;
+  margin: 2px 0 0 0 !important;
+}
+
 /* Featured Pets Section */
 .petconnect-featured {
   padding: 60px 40px;
