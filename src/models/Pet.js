@@ -1,5 +1,5 @@
 class Pet {
-  constructor(id, name, age, location, breed, status, description, image) {
+  constructor(id, name, age, location, breed, status, description, image, owner, contact) {
     this.id = id;
     this.name = name;
     this.age = age;
@@ -8,6 +8,8 @@ class Pet {
     this.status = status; // adopted / available / missing
     this.description = description;
     this.image = image;
+    this.owner = owner || "Unknown";       // new — optional, defaults to "Unknown"
+    this.contact = contact || "N/A";       // new — optional, defaults to "N/A"
   }
 
   markAdopted() {
