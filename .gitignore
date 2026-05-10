@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Development tools
+jdk-*/
+jdk-*.zip
+apache-maven-*/
+apache-maven-*-bin.zip
+backend/target/
