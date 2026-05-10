@@ -1,37 +1,47 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import AuthService from "../services/AuthService";
 
 function Login({ setIsLoggedIn, setUserName }) {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = () => {
-    if (!username || !password) {
-      setError("Please enter email and password");
+    if (!email || !password) {
+      setError("Please enter your email and password");
       return;
     }
 
-    if (AuthService.login(username, password)) {
+    // Load registered users from localStorage
+    const existingUsers = JSON.parse(localStorage.getItem("pawhavenUsers") || "[]");
+
+    // Find matching user
+    const matchedUser = existingUsers.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (matchedUser) {
       setError("");
+      localStorage.setItem("pawhavenCurrentUser", JSON.stringify(matchedUser));
       setIsLoggedIn(true);
-      setUserName(username);
+      setUserName(matchedUser.firstName);
       navigate("/dashboard");
     } else {
-      setError("Invalid credentials");
+      setError("Invalid email or password. Please sign up first.");
     }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleLogin();
   };
 
   return (
     <div>
       <div className="login-container">
-        <button
-          className="back-btn"
-          onClick={() => navigate("/")}
-        >
+
+        <button className="back-btn" onClick={() => navigate("/")}>
           ← Back to Home
         </button>
 
@@ -45,10 +55,11 @@ function Login({ setIsLoggedIn, setUserName }) {
           {error && <p className="error">{error}</p>}
 
           <input
-            type="text"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
 
           <input
@@ -56,6 +67,7 @@ function Login({ setIsLoggedIn, setUserName }) {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
 
           <button onClick={handleLogin}>Log In</button>
@@ -63,9 +75,10 @@ function Login({ setIsLoggedIn, setUserName }) {
           <p className="forgot">Forgot password?</p>
 
           <p>
-            Don’t have an account? <Link to="/register">Sign Up</Link>
+            Don't have an account? <Link to="/register">Sign Up</Link>
           </p>
         </div>
+
       </div>
     </div>
   );

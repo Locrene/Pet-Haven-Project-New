@@ -60,7 +60,41 @@ class PetService {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(posted));
   }
 
-  // Private: load user-posted pets from localStorage
+  // Update pet status (e.g., to "adopted" after adoption)
+  updatePetStatus(id, newStatus) {
+    const allPets = this.getAllPets();
+    const pet = allPets.find((p) => p.id === id);
+    
+    if (!pet) return false;
+    
+    // Check if it's a user-posted pet
+    const posted = this._getPostedPets();
+    const postedPet = posted.find((p) => p.id === id);
+    
+    if (postedPet) {
+      // Update in localStorage
+      postedPet.status = newStatus;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posted));
+      return true;
+    }
+    
+    // For seed pets, we'd need a different storage mechanism
+    // For now, we can store status updates in a separate key
+    const adoptions = JSON.parse(localStorage.getItem("petAdoptions")) || {};
+    adoptions[id] = newStatus;
+    localStorage.setItem("petAdoptions", JSON.stringify(adoptions));
+    return true;
+  }
+
+  // Get effective pet status (considering adoption updates)
+  getPetStatus(id) {
+    const adoptions = JSON.parse(localStorage.getItem("petAdoptions")) || {};
+    if (adoptions[id]) {
+      return adoptions[id];
+    }
+    const pet = this.getPetById(id);
+    return pet?.status || "available";
+  }
   _getPostedPets() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];

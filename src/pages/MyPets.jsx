@@ -19,6 +19,12 @@ function MyPets() {
         <button onClick={() => navigate("/")} className="btn btn-primary">Post New Pet</button>
       </div>
 
+      <div className="back-button-container">
+        <button onClick={() => navigate(-1)} className="btn btn-secondary">
+          Back
+        </button>
+      </div>
+
       {myPets.length === 0 ? (
         <div className="empty-state" style={{ marginTop: "40px" }}>
           <h3>No pets posted yet</h3>

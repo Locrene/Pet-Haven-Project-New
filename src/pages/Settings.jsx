@@ -1,310 +1,592 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+const TABS = [
+  { id: "general",       icon: "⚙️",  label: "General" },
+  { id: "privacy",       icon: "🔒",  label: "Privacy" },
+  { id: "notifications", icon: "🔔",  label: "Notifications" },
+  { id: "account",       icon: "🔐",  label: "Account" },
+];
+
+/* ─── tiny reusable components ─── */
+
+function ToggleRow({ label, description, checked, onChange }) {
+  return (
+    <div style={s.settingRow}>
+      <div style={s.settingInfo}>
+        <span style={s.settingLabel}>{label}</span>
+        <span style={s.settingDesc}>{description}</span>
+      </div>
+      <label style={s.toggle}>
+        <input type="checkbox" checked={checked} onChange={onChange} style={{ display: "none" }} />
+        <div style={{ ...s.track, background: checked ? "#1e3a6e" : "#cbd5e1" }}>
+          <div style={{ ...s.thumb, transform: checked ? "translateX(22px)" : "translateX(2px)" }} />
+        </div>
+      </label>
+    </div>
+  );
+}
+
+function SelectRow({ label, description, value, onChange, options }) {
+  return (
+    <div style={s.settingRow}>
+      <div style={s.settingInfo}>
+        <span style={s.settingLabel}>{label}</span>
+        <span style={s.settingDesc}>{description}</span>
+      </div>
+      <select value={value} onChange={onChange} style={s.select}>
+        {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
+    </div>
+  );
+}
+
+function ActionRow({ label, description, btnLabel, btnStyle, onClick }) {
+  return (
+    <div style={s.settingRow}>
+      <div style={s.settingInfo}>
+        <span style={s.settingLabel}>{label}</span>
+        <span style={s.settingDesc}>{description}</span>
+      </div>
+      <button onClick={onClick} style={{ ...s.actionBtn, ...btnStyle }}>
+        {btnLabel}
+      </button>
+    </div>
+  );
+}
+
+/* ─── main component ─── */
+
 function Settings({ theme, onThemeChange }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("general");
+  const [toast, setToast] = useState("");
+
   const [settings, setSettings] = useState({
+    theme: theme || "light",
+    language: "en",
+    showProfile: true,
+    showPetsPublicly: true,
+    allowDMs: true,
     emailNotifications: true,
     adoptionAlerts: true,
     missingPetAlerts: true,
-    showProfile: true,
-    theme: "light",
-    language: "en"
   });
-  const [saveMessage, setSaveMessage] = useState("");
 
   useEffect(() => {
-    setSettings(prev => ({ ...prev, theme }));
+    setSettings((prev) => ({ ...prev, theme }));
   }, [theme]);
 
-  const handleSettingChange = (key) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+  const toggle = (key) => setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  const select = (key, value) => {
+    setSettings((prev) => ({ ...prev, [key]: value }));
+    if (key === "theme") onThemeChange(value);
   };
 
-  const handleSelectChange = (key, value) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
+  const showToast = (msg, color = "#1e3a6e") => {
+    setToast({ msg, color });
+    setTimeout(() => setToast(""), 3000);
+  };
 
-    if (key === "theme") {
-      onThemeChange(value);
+  const handleSave = () => showToast("✓ Settings saved successfully!", "#0f766e");
+  const handleDelete = () => {
+    if (window.confirm("Are you sure? This will permanently delete your account.")) {
+      showToast("Account deletion requested.", "#dc2626");
     }
   };
 
-  const handleSave = () => {
-    setSaveMessage("✓ Settings saved successfully!");
-    setTimeout(() => setSaveMessage(""), 3000);
-  };
-
   return (
-    <div className="main-content">
-      <div className="dashboard-header">
-        <h2>Settings</h2>
-        <button onClick={() => navigate("/dashboard")} className="btn btn-ghost">Back</button>
+    <div style={s.page}>
+
+      {/* ── Header ── */}
+      <div style={s.header}>
+        <div>
+          <h1 style={s.pageTitle}>Settings</h1>
+          <p style={s.pageSubtitle}>Manage your account preferences and privacy</p>
+        </div>
+        <button onClick={() => navigate("/dashboard")} style={s.backBtn}>
+          ← Back to Dashboard
+        </button>
       </div>
 
-      <div style={{ marginTop: "30px", maxWidth: "900px" }}>
-        {/* Tabs */}
-        <div className="settings-tabs">
-          <button 
-            className={`tab ${activeTab === "general" ? "active" : ""}`}
-            onClick={() => setActiveTab("general")}
-          >
-            ⚙️ General
-          </button>
-          <button 
-            className={`tab ${activeTab === "privacy" ? "active" : ""}`}
-            onClick={() => setActiveTab("privacy")}
-          >
-            🔒 Privacy
-          </button>
-          <button 
-            className={`tab ${activeTab === "notifications" ? "active" : ""}`}
-            onClick={() => setActiveTab("notifications")}
-          >
-            🔔 Notifications
-          </button>
-          <button 
-            className={`tab ${activeTab === "account" ? "active" : ""}`}
-            onClick={() => setActiveTab("account")}
-          >
-            🔐 Account
-          </button>
-        </div>
+      <div style={s.layout}>
 
-        {/* General Settings */}
-        {activeTab === "general" && (
-          <div className="settings-panel">
-            <h3>General Settings</h3>
-            
-            <div className="settings-group">
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Theme</label>
-                  <p>Choose your preferred appearance</p>
-                </div>
-                <select 
-                  value={settings.theme}
-                  onChange={(e) => handleSelectChange("theme", e.target.value)}
-                  className="settings-select"
-                >
-                  <option value="light">Light Mode</option>
-                  <option value="dark">Dark Mode</option>
-                  <option value="auto">Auto (System)</option>
-                </select>
-              </div>
+        {/* ── Sidebar tabs ── */}
+        <aside style={s.sidebar}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                ...s.tabBtn,
+                ...(activeTab === tab.id ? s.tabBtnActive : {}),
+              }}
+            >
+              <span style={s.tabIcon}>{tab.icon}</span>
+              {tab.label}
+              {activeTab === tab.id && <span style={s.tabIndicator} />}
+            </button>
+          ))}
+        </aside>
 
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Language</label>
-                  <p>Select your preferred language</p>
-                </div>
-                <select 
-                  value={settings.language}
-                  onChange={(e) => handleSelectChange("language", e.target.value)}
-                  className="settings-select"
-                >
-                  <option value="en">English</option>
-                  <option value="fil">Filipino</option>
-                  <option value="es">Español</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* ── Panel ── */}
+        <main style={s.panel}>
 
-        {/* Privacy Settings */}
-        {activeTab === "privacy" && (
-          <div className="settings-panel">
-            <h3>Privacy Settings</h3>
-            
-            <div className="settings-group">
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Show Profile to Others</label>
-                  <p>Allow other users to see your profile</p>
-                </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={settings.showProfile}
-                    onChange={() => handleSettingChange("showProfile")}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
+          {/* GENERAL */}
+          {activeTab === "general" && (
+            <Section title="General Settings" subtitle="Configure your app experience">
+              <SelectRow
+                label="Theme"
+                description="Choose your preferred appearance"
+                value={settings.theme}
+                onChange={(e) => select("theme", e.target.value)}
+                options={[
+                  { value: "light", label: "☀️  Light Mode" },
+                  { value: "dark",  label: "🌙  Dark Mode" },
+                  { value: "auto",  label: "🖥️  Auto (System)" },
+                ]}
+              />
+              <SelectRow
+                label="Language"
+                description="Select your preferred language"
+                value={settings.language}
+                onChange={(e) => select("language", e.target.value)}
+                options={[
+                  { value: "en",  label: "🇺🇸  English" },
+                  { value: "fil", label: "🇵🇭  Filipino" },
+                  { value: "es",  label: "🇪🇸  Español" },
+                ]}
+              />
+            </Section>
+          )}
 
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Show My Pets Publicly</label>
-                  <p>Your posted pets will be visible to all users</p>
-                </div>
-                <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
+          {/* PRIVACY */}
+          {activeTab === "privacy" && (
+            <Section title="Privacy Settings" subtitle="Control who can see your information">
+              <ToggleRow
+                label="Show Profile to Others"
+                description="Allow other users to view your profile page"
+                checked={settings.showProfile}
+                onChange={() => toggle("showProfile")}
+              />
+              <ToggleRow
+                label="Show My Pets Publicly"
+                description="Your posted pets will be visible to all users"
+                checked={settings.showPetsPublicly}
+                onChange={() => toggle("showPetsPublicly")}
+              />
+              <ToggleRow
+                label="Allow Direct Messages"
+                description="Let other users send you messages"
+                checked={settings.allowDMs}
+                onChange={() => toggle("allowDMs")}
+              />
+            </Section>
+          )}
 
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Allow Direct Messages</label>
-                  <p>Let other users send you messages</p>
-                </div>
-                <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-        )}
+          {/* NOTIFICATIONS */}
+          {activeTab === "notifications" && (
+            <Section title="Notification Preferences" subtitle="Choose what updates you receive">
+              <ToggleRow
+                label="Email Notifications"
+                description="Receive important updates directly to your email"
+                checked={settings.emailNotifications}
+                onChange={() => toggle("emailNotifications")}
+              />
+              <ToggleRow
+                label="Adoption Alerts"
+                description="Get notified when a pet matches your preferences"
+                checked={settings.adoptionAlerts}
+                onChange={() => toggle("adoptionAlerts")}
+              />
+              <ToggleRow
+                label="Missing Pet Alerts"
+                description="Be notified about reported missing pets in your area"
+                checked={settings.missingPetAlerts}
+                onChange={() => toggle("missingPetAlerts")}
+              />
+            </Section>
+          )}
 
-        {/* Notifications Settings */}
-        {activeTab === "notifications" && (
-          <div className="settings-panel">
-            <h3>Notification Preferences</h3>
-            
-            <div className="settings-group">
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Email Notifications</label>
-                  <p>Receive updates via email</p>
-                </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={settings.emailNotifications}
-                    onChange={() => handleSettingChange("emailNotifications")}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
+          {/* ACCOUNT */}
+          {activeTab === "account" && (
+            <>
+              <Section title="Account Security" subtitle="Keep your account safe and secure">
+                <ActionRow
+                  label="Change Password"
+                  description="Update your password regularly for better security"
+                  btnLabel="Change Password"
+                  btnStyle={s.outlineBtn}
+                />
+                <ActionRow
+                  label="Two-Factor Authentication"
+                  description="Add an extra layer of security to your login"
+                  btnLabel="Enable 2FA"
+                  btnStyle={s.outlineBtn}
+                />
+                <ActionRow
+                  label="Active Sessions"
+                  description="View and manage devices logged into your account"
+                  btnLabel="View Sessions"
+                  btnStyle={s.outlineBtn}
+                />
+              </Section>
 
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Adoption Alerts</label>
-                  <p>Get notified about new adoption matches</p>
-                </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={settings.adoptionAlerts}
-                    onChange={() => handleSettingChange("adoptionAlerts")}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div className="setting-item">
-                <div className="setting-info">
-                  <label>Missing Pet Alerts</label>
-                  <p>Notifications for reported missing pets in your area</p>
-                </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={settings.missingPetAlerts}
-                    onChange={() => handleSettingChange("missingPetAlerts")}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Account Settings */}
-        {activeTab === "account" && (
-          <div className="settings-panel">
-            <h3>Account Management</h3>
-            
-            <div className="settings-group">
-              <div className="setting-item full-width">
-                <div className="setting-info">
-                  <label>Change Password</label>
-                  <p>Update your password to keep your account secure</p>
-                </div>
-                <button className="btn btn-outline" style={{ minWidth: "140px" }}>
-                  Change Password
-                </button>
-              </div>
-
-              <div className="setting-item full-width">
-                <div className="setting-info">
-                  <label>Two-Factor Authentication</label>
-                  <p>Add an extra layer of security to your account</p>
-                </div>
-                <button className="btn btn-outline" style={{ minWidth: "140px" }}>
-                  Enable 2FA
-                </button>
-              </div>
-
-              <div className="setting-item full-width">
-                <div className="setting-info">
-                  <label>Session Management</label>
-                  <p>View and manage active sessions</p>
-                </div>
-                <button className="btn btn-outline" style={{ minWidth: "140px" }}>
-                  View Sessions
-                </button>
-              </div>
-            </div>
-
-            <hr style={{ margin: "30px 0", border: "none", borderTop: "1px solid #e3ebfa" }} />
-
-            <div className="danger-zone">
-              <h3 style={{ color: "#e74c3c" }}>⚠️ Danger Zone</h3>
-              <p>Irreversible actions - proceed with caution</p>
-              
-              <div className="settings-group">
-                <div className="setting-item full-width">
-                  <div className="setting-info">
-                    <label>Delete Account</label>
-                    <p>Permanently delete your account and all data</p>
+              {/* Danger Zone */}
+              <div style={s.dangerZone}>
+                <div style={s.dangerHeader}>
+                  <span style={s.dangerIcon}>⚠️</span>
+                  <div>
+                    <p style={s.dangerTitle}>Danger Zone</p>
+                    <p style={s.dangerDesc}>These actions are irreversible — proceed with caution</p>
                   </div>
-                  <button 
-                    className="btn btn-danger"
-                    style={{ minWidth: "140px" }}
-                  >
+                </div>
+                <div style={s.dangerRow}>
+                  <div style={s.settingInfo}>
+                    <span style={{ ...s.settingLabel, color: "#dc2626" }}>Delete Account</span>
+                    <span style={s.settingDesc}>Permanently delete your account and all associated data</span>
+                  </div>
+                  <button onClick={handleDelete} style={s.deleteBtn}>
                     Delete Account
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            </>
+          )}
 
-        {/* Save Message */}
-        {saveMessage && (
-          <div style={{
-            marginTop: "20px",
-            padding: "12px 16px",
-            background: "#d4edda",
-            color: "#155724",
-            borderRadius: "10px",
-            textAlign: "center"
-          }}>
-            {saveMessage}
+          {/* ── Footer actions ── */}
+          <div style={s.footer}>
+            <button onClick={handleSave} style={s.saveBtn}>
+              💾 Save Changes
+            </button>
+            <button onClick={() => navigate("/dashboard")} style={s.cancelBtn}>
+              Cancel
+            </button>
           </div>
-        )}
-
-        {/* Save Button */}
-        <div style={{ marginTop: "30px", display: "flex", gap: "12px" }}>
-          <button onClick={handleSave} className="btn btn-primary" style={{ minWidth: "120px" }}>
-            💾 Save Changes
-          </button>
-          <button onClick={() => navigate("/dashboard")} className="btn btn-outline" style={{ minWidth: "120px" }}>
-            Cancel
-          </button>
-        </div>
+        </main>
       </div>
+
+      {/* ── Toast ── */}
+      {toast && (
+        <div style={{ ...s.toast, background: toast.color }}>
+          {toast.msg}
+        </div>
+      )}
     </div>
   );
 }
+
+/* ─── Section wrapper ─── */
+function Section({ title, subtitle, children }) {
+  return (
+    <div style={s.section}>
+      <div style={s.sectionHeader}>
+        <h3 style={s.sectionTitle}>{title}</h3>
+        <p style={s.sectionSubtitle}>{subtitle}</p>
+      </div>
+      <div style={s.sectionBody}>{children}</div>
+    </div>
+  );
+}
+
+/* ─── Styles ─── */
+const s = {
+  page: {
+    minHeight: "100vh",
+    background: "#f4f6fb",
+    padding: "32px 24px",
+    fontFamily: "'Poppins', sans-serif",
+  },
+  header: {
+    maxWidth: 1000,
+    margin: "0 auto 28px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 16,
+  },
+  pageTitle: {
+    margin: 0,
+    fontSize: 28,
+    fontWeight: 800,
+    color: "#0f172a",
+  },
+  pageSubtitle: {
+    margin: "4px 0 0",
+    fontSize: 14,
+    color: "#64748b",
+  },
+  backBtn: {
+    padding: "10px 20px",
+    background: "white",
+    border: "1.5px solid #cbd5e1",
+    borderRadius: 10,
+    fontSize: 14,
+    fontWeight: 600,
+    color: "#1e3a6e",
+    cursor: "pointer",
+    fontFamily: "inherit",
+  },
+
+  layout: {
+    maxWidth: 1000,
+    margin: "0 auto",
+    display: "grid",
+    gridTemplateColumns: "220px 1fr",
+    gap: 24,
+    alignItems: "start",
+  },
+
+  // Sidebar
+  sidebar: {
+    background: "white",
+    borderRadius: 16,
+    padding: 10,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  tabBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "12px 16px",
+    border: "none",
+    borderRadius: 10,
+    background: "transparent",
+    color: "#475569",
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: "pointer",
+    textAlign: "left",
+    position: "relative",
+    fontFamily: "inherit",
+    transition: "background 0.15s, color 0.15s",
+  },
+  tabBtnActive: {
+    background: "rgba(30,58,110,0.08)",
+    color: "#1e3a6e",
+  },
+  tabIcon: { fontSize: 16 },
+  tabIndicator: {
+    position: "absolute",
+    right: 12,
+    width: 6,
+    height: 6,
+    borderRadius: "50%",
+    background: "#1e3a6e",
+  },
+
+  // Panel
+  panel: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+  },
+
+  // Section
+  section: {
+    background: "white",
+    borderRadius: 16,
+    overflow: "hidden",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+  },
+  sectionHeader: {
+    padding: "20px 24px 16px",
+    borderBottom: "1px solid #f1f5f9",
+  },
+  sectionTitle: {
+    margin: 0,
+    fontSize: 17,
+    fontWeight: 700,
+    color: "#0f172a",
+  },
+  sectionSubtitle: {
+    margin: "4px 0 0",
+    fontSize: 13,
+    color: "#94a3b8",
+  },
+  sectionBody: {
+    padding: "4px 0",
+  },
+
+  // Setting Row
+  settingRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 24,
+    padding: "16px 24px",
+    borderBottom: "1px solid #f8fafc",
+    transition: "background 0.15s",
+  },
+  settingInfo: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    flex: 1,
+  },
+  settingLabel: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: "#0f172a",
+  },
+  settingDesc: {
+    fontSize: 13,
+    color: "#94a3b8",
+    lineHeight: 1.5,
+  },
+
+  // Toggle
+  toggle: { cursor: "pointer" },
+  track: {
+    width: 46,
+    height: 26,
+    borderRadius: 13,
+    position: "relative",
+    transition: "background 0.2s",
+    flexShrink: 0,
+  },
+  thumb: {
+    position: "absolute",
+    top: 2,
+    width: 22,
+    height: 22,
+    borderRadius: "50%",
+    background: "white",
+    boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+    transition: "transform 0.2s",
+  },
+
+  // Select
+  select: {
+    padding: "9px 14px",
+    border: "1.5px solid #e2e8f0",
+    borderRadius: 10,
+    fontSize: 14,
+    color: "#0f172a",
+    background: "#f8fafc",
+    cursor: "pointer",
+    fontFamily: "inherit",
+    fontWeight: 500,
+    minWidth: 180,
+    outline: "none",
+  },
+
+  // Action button
+  actionBtn: {
+    padding: "9px 20px",
+    border: "1.5px solid #cbd5e1",
+    borderRadius: 10,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+    fontFamily: "inherit",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+  },
+  outlineBtn: {
+    background: "white",
+    color: "#1e3a6e",
+    border: "1.5px solid #cbd5e1",
+  },
+
+  // Danger zone
+  dangerZone: {
+    background: "white",
+    borderRadius: 16,
+    overflow: "hidden",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+    border: "1.5px solid #fecaca",
+  },
+  dangerHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: 14,
+    padding: "18px 24px",
+    background: "#fff5f5",
+    borderBottom: "1px solid #fecaca",
+  },
+  dangerIcon: { fontSize: 22 },
+  dangerTitle: {
+    margin: 0,
+    fontSize: 15,
+    fontWeight: 700,
+    color: "#dc2626",
+  },
+  dangerDesc: {
+    margin: "2px 0 0",
+    fontSize: 13,
+    color: "#ef4444",
+  },
+  dangerRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 24,
+    padding: "16px 24px",
+  },
+  deleteBtn: {
+    padding: "9px 20px",
+    background: "#dc2626",
+    color: "white",
+    border: "none",
+    borderRadius: 10,
+    fontSize: 13,
+    fontWeight: 700,
+    cursor: "pointer",
+    fontFamily: "inherit",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+  },
+
+  // Footer
+  footer: {
+    display: "flex",
+    gap: 12,
+    paddingTop: 4,
+  },
+  saveBtn: {
+    padding: "12px 28px",
+    background: "linear-gradient(135deg, #1e3a6e 0%, #2c4a7c 100%)",
+    color: "white",
+    border: "none",
+    borderRadius: 10,
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+    fontFamily: "inherit",
+    boxShadow: "0 4px 12px rgba(30,58,110,0.25)",
+  },
+  cancelBtn: {
+    padding: "12px 24px",
+    background: "white",
+    color: "#475569",
+    border: "1.5px solid #e2e8f0",
+    borderRadius: 10,
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: "pointer",
+    fontFamily: "inherit",
+  },
+
+  // Toast
+  toast: {
+    position: "fixed",
+    bottom: 28,
+    right: 28,
+    color: "white",
+    padding: "14px 24px",
+    borderRadius: 12,
+    fontSize: 14,
+    fontWeight: 600,
+    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+    zIndex: 999,
+    animation: "slideUp 0.3s ease",
+  },
+};
 
 export default Settings;

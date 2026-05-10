@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PetService from "../services/PetService";
 
 function PetProfile() {
   const [pet, setPet] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const pets = PetService.getAllPets();
@@ -16,6 +18,7 @@ function PetProfile() {
 
   return (
     <div className="profile-page">
+      <button className="btn btn-secondary" onClick={() => navigate('/adoption')}>Back to Adoption Feed</button>
       <div className="profile-card">
         <img className="profile-image" src={pet.image} alt={pet.name} />
         <div className="profile-details">

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import PetCard from "../components/PetCard";
 import PetService from "../services/PetService";
 import PostPetModal from "../components/PostPetModal.jsx";
+import SavedFavorites from "./SavedFavorites";
+import "../styles/adoption-feed-improved.css";
 
 function AdoptionFeed() {
   const [pets, setPets] = useState([]);
@@ -11,19 +13,13 @@ function AdoptionFeed() {
   const [favoritePets, setFavoritePets] = useState([]);
   const [favoriteCount, setFavoriteCount] = useState(0);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [sortBy, setSortBy] = useState("name");
 
   const loadPets = () => setPets(PetService.getAllPets());
 
   useEffect(() => { 
     loadPets();
   }, []);
-
-  useEffect(() => {
-    if (showFavorites) {
-      const stored = JSON.parse(localStorage.getItem("favoritePets")) || [];
-      setFavoritePets(stored);
-    }
-  }, [showFavorites]);
 
   const refreshCount = () => {
     const stored = JSON.parse(localStorage.getItem("favoritePets")) || [];
@@ -46,86 +42,34 @@ function AdoptionFeed() {
 
   // Main feed filter
   const filteredPets = pets.filter((pet) => {
-    const matchesSearch = pet.name.toLowerCase().includes(search.toLowerCase());
+    const searchLower = search.toLowerCase();
+    const matchesSearch = 
+      pet.name.toLowerCase().includes(searchLower) ||
+      pet.breed?.toLowerCase().includes(searchLower) ||
+      pet.location?.toLowerCase().includes(searchLower);
+    
+    // Get effective pet status (considering adoptions)
+    const effectiveStatus = PetService.getPetStatus(pet.id);
+    
     const matchesFilter =
       activeFilter === "All" ||
       (activeFilter === "Available"
-        ? pet.status === "available"
-        : pet.breed?.toLowerCase().includes(activeFilter.toLowerCase()) ||
-          pet.type?.toLowerCase().includes(activeFilter.toLowerCase()));
+        ? effectiveStatus === "available"
+        : pet.breed?.toLowerCase().includes(activeFilter.toLowerCase()));
+    
     return matchesSearch && matchesFilter;
+  }).sort((a, b) => {
+    if (sortBy === "name") {
+      return a.name.localeCompare(b.name);
+    } else if (sortBy === "location") {
+      return a.location.localeCompare(b.location);
+    }
+    return 0;
   });
-
-  // Saved favorites search
-  const filteredFavorites = favoritePets.filter((pet) =>
-    pet.name.toLowerCase().includes(search.toLowerCase())
-  );
 
   /* ── SAVED FAVORITES VIEW ── */
   if (showFavorites) {
-    return (
-      <div className="adoption-feed-page">
-        <div className="adoption-feed-container">
-          
-          {/* Page Header for Saved */}
-          <div className="adoption-feed-header">
-            <div className="feed-header-top">
-              <button className="back-btn-icon" onClick={goBackToFeed}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-              </button>
-              <div>
-                <h1 className="feed-page-title">❤️ Saved Favorites</h1>
-                <p className="feed-page-subtitle">Your collection of favorite pets</p>
-              </div>
-            </div>
-
-            {/* Search in Saved */}
-            <div className="feed-header-controls">
-              <div className="search-container" style={{flex: 1, maxWidth: "400px"}}>
-                <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search saved pets..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Saved Pets Grid */}
-          <div className="adoption-feed-grid" onClick={refreshCount}>
-            {favoritePets.length === 0 ? (
-              <div className="empty-state full-width">
-                <div className="empty-state-icon">🤍</div>
-                <h3>No saved favorites yet</h3>
-                <p>Tap the ❤️ on any pet card to save them here!</p>
-                <button className="btn btn-primary" onClick={goBackToFeed}>
-                  ← Browse Pets
-                </button>
-              </div>
-            ) : filteredFavorites.length === 0 ? (
-              <div className="empty-state full-width">
-                <div className="empty-state-icon">🔍</div>
-                <h3>No matches found</h3>
-                <p>Try adjusting your search to find saved pets</p>
-              </div>
-            ) : (
-              filteredFavorites.map((pet) => (
-                <PetCard key={pet.id} pet={pet} />
-              ))
-            )}
-          </div>
-
-        </div>
-      </div>
-    );
+    return <SavedFavorites onClose={goBackToFeed} />;
   }
 
   /* ── MAIN ADOPTION FEED VIEW ── */
@@ -133,75 +77,120 @@ function AdoptionFeed() {
     <div className="adoption-feed-page">
       <div className="adoption-feed-container">
 
-        {/* Page Title & Header */}
+        {/* Page Header */}
         <div className="adoption-feed-header">
-          <div className="feed-header-top">
-            <h1 className="feed-page-title">Adoption Feed</h1>
-            <p className="feed-page-subtitle">Find your perfect companion</p>
+          <div className="feed-header-content">
+            <h1 className="feed-page-title">🐾 Adoption Feed</h1>
+            <p className="feed-page-subtitle">Find your perfect companion today</p>
           </div>
 
-          {/* Search & Action Buttons */}
-          <div className="feed-header-controls">
-            <div className="search-container">
-              <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search pets by name, breed, or location..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+          {/* Primary Actions */}
+          <div className="feed-header-actions">
+            <button
+              className="btn-post-pet"
+              onClick={() => setShowPostModal(true)}
+              title="List a pet for adoption"
+            >
+              + Post a Pet
+            </button>
 
-            <div className="action-buttons">
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowPostModal(true)}
-              >
-                + Post a Pet
-              </button>
+            <button
+              className="btn-saved-favorites"
+              onClick={goToSaved}
+              title={`View ${favoriteCount} saved favorites`}
+            >
+              <span className="heart-icon">❤️</span>
+              <span>Saved Favorites</span>
+              {favoriteCount > 0 && (
+                <span className="favorite-badge">{favoriteCount}</span>
+              )}
+            </button>
+          </div>
+        </div>
 
+        {/* Search Bar */}
+        <div className="feed-search-section">
+          <div className="search-wrapper">
+            <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input
+              type="text"
+              className="search-input-feed"
+              placeholder="Search by name, breed, or location..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search pets"
+            />
+            {search && (
               <button
-                className="btn btn-outline"
-                onClick={goToSaved}
-                title={`View ${favoriteCount} saved favorites`}
+                className="search-clear"
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
               >
-                ❤️ Saved
-                {favoriteCount > 0 && (
-                  <span className="badge">{favoriteCount}</span>
-                )}
+                ✕
               </button>
-            </div>
+            )}
           </div>
 
-          {/* Filter Pills */}
+          {/* Sort Options */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="sort-select"
+          >
+            <option value="name">Sort by Name</option>
+            <option value="location">Sort by Location</option>
+          </select>
+        </div>
+
+        {/* Filter Pills */}
+        <div className="filter-section">
+          <div className="filter-label">Filter by:</div>
           <div className="filter-pills">
-            {["All", "Dogs", "Cats", "Available"].map((filter) => (
+            {["All", "Available"].map((filter) => (
               <button
                 key={filter}
                 className={`filter-pill ${activeFilter === filter ? "active" : ""}`}
                 onClick={() => setActiveFilter(filter)}
               >
-                {filter}
+                {filter === "All" ? "🐾 All Pets" : "✓ Available Only"}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Pet Grid */}
-        <div className="adoption-feed-grid" onClick={refreshCount}>
+        {/* Results Info */}
+        {search && (
+          <div className="results-info">
+            Found <strong>{filteredPets.length}</strong> pet{filteredPets.length !== 1 ? "s" : ""}
+          </div>
+        )}
+
+        {/* Pet Grid - 4 Columns Responsive */}
+        <div className="adoption-feed-grid-modern" onClick={refreshCount}>
           {filteredPets.length > 0 ? (
             filteredPets.map((pet) => (
               <PetCard key={pet.id} pet={pet} />
             ))
           ) : (
-            <div className="empty-state">
+            <div className="empty-state-adoption">
               <div className="empty-state-icon">🔍</div>
               <h3>No pets found</h3>
-              <p>Try adjusting your search or filters to find more pets</p>
+              <p>
+                {search 
+                  ? "Try adjusting your search terms"
+                  : "No pets available at the moment"}
+              </p>
+              {search && (
+                <button
+                  className="btn-clear-filters"
+                  onClick={() => { setSearch(""); setActiveFilter("All"); }}
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
           )}
         </div>

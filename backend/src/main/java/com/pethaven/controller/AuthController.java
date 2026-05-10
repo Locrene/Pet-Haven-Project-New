@@ -36,4 +36,14 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/verify/{userId}")
+    public ResponseEntity<?> verifyUser(@PathVariable Long userId) {
+        try {
+            authService.verifyUser(userId);
+            return ResponseEntity.ok("User verified successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
 }

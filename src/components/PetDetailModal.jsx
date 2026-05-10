@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import AdoptionForm from "./AdoptionForm";
+import PetService from "../services/PetService";
 
 const STATUS_STYLES = {
   available: { bg: "#e6f9f0", color: "#1a9e5c", label: "Available" },
@@ -7,9 +9,18 @@ const STATUS_STYLES = {
 };
 
 function PetDetailModal({ pet, onClose }) {
+  const [showAdoptionForm, setShowAdoptionForm] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(pet.status);
+
+  useEffect(() => {
+    // Get the effective status (considering adoptions)
+    const effectiveStatus = PetService.getPetStatus(pet.id);
+    setCurrentStatus(effectiveStatus);
+  }, [pet.id]);
+
   if (!pet) return null;
 
-  const status = STATUS_STYLES[pet.status] || STATUS_STYLES["available"];
+  const status = STATUS_STYLES[currentStatus] || STATUS_STYLES["available"];
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) onClose();
@@ -83,8 +94,23 @@ function PetDetailModal({ pet, onClose }) {
             <a href={`tel:${pet.contact}`} className="modal-call-btn">
               📞 Call Owner
             </a>
+            <button 
+              className="modal-adopt-btn"
+              onClick={() => setShowAdoptionForm(true)}
+              disabled={currentStatus !== "available"}
+            >
+              🐾 {currentStatus === "available" ? "Adopt Now" : "Not Available"}
+            </button>
             <button className="modal-dismiss-btn" onClick={onClose}>Close</button>
           </div>
+
+          {showAdoptionForm && (
+            <AdoptionForm 
+              pet={pet} 
+              onClose={() => setShowAdoptionForm(false)}
+              onSuccess={onClose}
+            />
+          )}
         </div>
 
       </div>

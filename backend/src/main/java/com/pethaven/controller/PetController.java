@@ -52,25 +52,33 @@ public class PetController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<PetDTO> createPet(@Valid @RequestBody PetDTO petDTO, Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        PetDTO createdPet = petService.createPet(petDTO, userDetails.getId());
-        return ResponseEntity.ok(createdPet);
+    public ResponseEntity<?> createPet(@Valid @RequestBody PetDTO petDTO) {
+        try {
+            petService.createPet(petDTO);
+            return ResponseEntity.ok("Pet created successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<PetDTO> updatePet(@PathVariable Long id, @Valid @RequestBody PetDTO petDTO) {
-        PetDTO updatedPet = petService.updatePet(id, petDTO);
-        return ResponseEntity.ok(updatedPet);
+    public ResponseEntity<?> updatePet(@PathVariable Long id, @Valid @RequestBody PetDTO petDTO) {
+        try {
+            petService.updatePet(id, petDTO);
+            return ResponseEntity.ok("Pet updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> deletePet(@PathVariable Long id) {
-        petService.deletePet(id);
-        return ResponseEntity.ok("Pet deleted successfully!");
+        try {
+            petService.deletePet(id);
+            return ResponseEntity.ok("Pet deleted successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/count/{status}")

@@ -3,6 +3,7 @@ package com.pethaven.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -55,6 +56,13 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @NotNull
+    private Boolean verificationStatus;
+
+    @NotBlank
+    @Size(max = 20)
+    private String userType;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Pet> pets = new HashSet<>();

@@ -3758,6 +3758,29 @@ section {
   background: #1e3560;
 }
 
+.modal-adopt-btn {
+  flex: 1;
+  padding: 11px 0;
+  background: linear-gradient(135deg, #4f8ef7, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-adopt-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(79, 142, 247, 0.3);
+}
+
+.modal-adopt-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .modal-dismiss-btn {
   flex: 1;
   padding: 11px 0;

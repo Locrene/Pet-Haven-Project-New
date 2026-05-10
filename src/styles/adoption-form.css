@@ -1,0 +1,361 @@
+/* ═══════════════════════════════════════════════════════════════ */
+/* ADOPTION FORM - STYLES */
+/* ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --primary-navy: #1a2236;
+  --primary-blue: #4f8ef7;
+  --secondary-purple: #7c3aed;
+  --accent-coral: #f97316;
+  --success-green: #10b981;
+  --light-gray: #f3f4f6;
+  --border-gray: #e5e7eb;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adoption-form-modal {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 2px solid var(--border-gray);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+  background: var(--primary-navy);
+  color: white;
+  border-color: var(--primary-navy);
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* FORM HEADER */
+/* ─────────────────────────────────────────────────────────────── */
+
+.adoption-form-header {
+  background: linear-gradient(135deg, var(--primary-navy), #2d3a5c);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px 16px 0 0;
+}
+
+.adoption-form-pet-info {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.adoption-form-pet-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+.adoption-form-header h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.adoption-form-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* FORM STYLES */
+/* ─────────────────────────────────────────────────────────────── */
+
+.adoption-form {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.required {
+  color: var(--accent-coral);
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-gray);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: white;
+  transition: var(--transition);
+  resize: vertical;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
+}
+
+.form-input:disabled,
+.form-textarea:disabled {
+  background: var(--light-gray);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+
+.form-textarea {
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* CHECKBOX */
+/* ─────────────────────────────────────────────────────────────── */
+
+.form-checkbox {
+  margin-bottom: 2rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.checkbox-label:hover {
+  background: var(--light-gray);
+}
+
+.checkbox-label input {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.125rem;
+  cursor: pointer;
+  accent-color: var(--primary-blue);
+  flex-shrink: 0;
+}
+
+.checkbox-label input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* ERROR MESSAGE */
+/* ─────────────────────────────────────────────────────────────── */
+
+.form-error {
+  background: rgba(217, 48, 37, 0.1);
+  border: 2px solid #d93025;
+  color: #d93025;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: shake 0.3s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* FORM ACTIONS */
+/* ─────────────────────────────────────────────────────────────── */
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-cancel,
+.btn-submit {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.btn-cancel {
+  background: var(--light-gray);
+  color: var(--text-dark);
+  border: 2px solid var(--border-gray);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: var(--border-gray);
+  border-color: var(--text-light);
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 142, 247, 0.3);
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 142, 247, 0.4);
+}
+
+.btn-cancel:disabled,
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* SUCCESS STATE */
+/* ─────────────────────────────────────────────────────────────── */
+
+.adoption-success-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  max-width: 400px;
+}
+
+.success-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, var(--success-green), #059669);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 700;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.success-content h2 {
+  color: var(--primary-navy);
+  margin: 1rem 0 0.75rem;
+  font-size: 1.5rem;
+}
+
+.success-content p {
+  color: var(--text-light);
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.success-content strong {
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .adoption-form-modal {
+    width: 95vw;
+    max-height: calc(100vh - 2rem);
+  }
+
+  .adoption-form {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .adoption-form-header {
+    padding: 1.5rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+}
