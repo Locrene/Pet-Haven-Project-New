@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import AuthService from "../services/AuthService";
 
 function Login({ setIsLoggedIn, setUserName }) {
   const navigate = useNavigate();
@@ -14,10 +15,14 @@ function Login({ setIsLoggedIn, setUserName }) {
       return;
     }
 
-    setError("");
-    setIsLoggedIn(true);
-    setUserName(username);
-    navigate("/");
+    if (AuthService.login(username, password)) {
+      setError("");
+      setIsLoggedIn(true);
+      setUserName(username);
+      navigate("/dashboard");
+    } else {
+      setError("Invalid credentials");
+    }
   };
 
   return (
