@@ -33,6 +33,7 @@ function Dashboard() {
 
   const totalPets = available + missing + adopted;
 
+  /*Pets Available Card*/ 
   const statCards = [
     {
       title: "Pets Available",
@@ -42,6 +43,8 @@ function Dashboard() {
       icon: "🐾",
       badgeType: "success",
     },
+
+    /*Missing Pets Card*/ 
     {
       title: "Missing Pets",
       value: missing,
@@ -50,6 +53,8 @@ function Dashboard() {
       icon: "🔍",
       badgeType: "neutral",
     },
+
+    /*Adopted Pets Card*/
     {
       title: "Adopted Pets",
       value: adopted,
@@ -60,6 +65,7 @@ function Dashboard() {
     },
   ];
 
+  /*Adoption Trend*/
   const lineData = [
     { day: "Mon", adoptions: 2 },
     { day: "Tue", adoptions: 5 },
@@ -70,12 +76,14 @@ function Dashboard() {
     { day: "Sun", adoptions: 3 },
   ];
 
+  /*Pet Status using Pie Chart*/
   const pieData = [
     { name: "Available", value: available, color: "#1e3a6e" },
     { name: "Adopted", value: adopted, color: "#10b981" },
     { name: "Missing", value: missing, color: "#f97316" },
   ];
 
+  /*Recent Activity*/ 
   const activityItems = [
     { id: 1, status: "🟠", text: "Luna was listed for adoption", time: "2 hrs ago" },
     { id: 2, status: "🟢", text: "New user registered", time: "5 hrs ago" },

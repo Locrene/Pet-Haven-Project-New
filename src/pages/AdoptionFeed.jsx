@@ -75,6 +75,8 @@ function AdoptionFeed() {
                   <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
               </button>
+
+              /*Saved Button in Adoption*/
               <div>
                 <h1 className="feed-page-title">❤️ Saved Favorites</h1>
                 <p className="feed-page-subtitle">Your collection of favorite pets</p>
@@ -128,6 +130,7 @@ function AdoptionFeed() {
     );
   }
 
+  /*Adoption Page*/
   /* ── MAIN ADOPTION FEED VIEW ── */
   return (
     <div className="adoption-feed-page">
@@ -207,6 +210,7 @@ function AdoptionFeed() {
         </div>
 
       </div>
+
 
       {/* Post a Pet modal */}
       {showPostModal && (

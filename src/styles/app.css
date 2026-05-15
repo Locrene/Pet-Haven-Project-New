@@ -1326,7 +1326,7 @@ body.theme-dark .btn-danger:hover {
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  gap: 30px;
   margin-bottom: 24px;
 }
 
