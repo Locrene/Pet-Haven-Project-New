@@ -24,7 +24,18 @@ function Login({ setIsLoggedIn, setUserName }) {
       setIsLoggedIn(true);
       setUserName(currentUser.firstName);
 
-      navigate("/dashboard");
+      // Check if admin email
+      const isAdmin =
+        currentUser.email &&
+        currentUser.email.endsWith("@pewhaven.ph");
+
+      // Redirect based on account type
+      if (isAdmin) {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+
     } else {
       setError("Invalid email or password");
     }
