@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import AuthService from "../services/AuthService";
 
 function Register() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Register() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [error, setError] = useState("");
@@ -17,7 +18,7 @@ function Register() {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -38,6 +39,18 @@ function Register() {
       return;
     }
 
+    const result = AuthService.register(
+      form.firstName,
+      form.lastName,
+      form.email,
+      form.password
+    );
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
     setError("");
     alert("Registered successfully!");
     navigate("/login");
@@ -46,8 +59,6 @@ function Register() {
   return (
     <div>
       <div className="login-container">
-
-        {/* BACK BUTTON */}
         <button
           className="back-btn"
           onClick={() => navigate("/")}
@@ -58,19 +69,19 @@ function Register() {
         <div className="login-card">
           <h2>Create Your Account</h2>
 
-          {/* ERROR */}
           {error && <p className="error">{error}</p>}
 
-          {/* INPUTS */}
           <input
             name="firstName"
             placeholder="First Name"
+            value={form.firstName}
             onChange={handleChange}
           />
 
           <input
             name="lastName"
             placeholder="Last Name"
+            value={form.lastName}
             onChange={handleChange}
           />
 
@@ -78,6 +89,7 @@ function Register() {
             name="email"
             type="email"
             placeholder="Email"
+            value={form.email}
             onChange={handleChange}
           />
 
@@ -85,6 +97,7 @@ function Register() {
             name="password"
             type="password"
             placeholder="Password"
+            value={form.password}
             onChange={handleChange}
           />
 
@@ -92,20 +105,20 @@ function Register() {
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
+            value={form.confirmPassword}
             onChange={handleChange}
           />
 
-          {/* BUTTON */}
-          <button onClick={handleRegister}>Sign Up</button>
+          <button onClick={handleRegister}>
+            Sign Up
+          </button>
 
-          {/* LOGIN LINK */}
           <p>
-            Already have an account? <Link to="/login">Log In</Link>
+            Already have an account?{" "}
+            <Link to="/login">Log In</Link>
           </p>
         </div>
-
       </div>
-
     </div>
   );
 }
