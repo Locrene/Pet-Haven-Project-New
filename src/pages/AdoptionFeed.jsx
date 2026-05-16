@@ -100,20 +100,39 @@ function AdoptionFeed() {
   };
 
   const filteredPets = pets.filter((pet) => {
-    const matchesSearch = pet.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const searchText = search.toLowerCase();
 
-    const matchesFilter =
-      activeFilter === "All" ||
-      (activeFilter === "Available"
-        ? pet.status === "available"
-        : pet.breed?.toLowerCase().includes(activeFilter.toLowerCase()) ||
-          pet.type?.toLowerCase().includes(activeFilter.toLowerCase()));
+  // Search filter
+  const matchesSearch =
+    pet.name?.toLowerCase().includes(searchText) ||
+    pet.breed?.toLowerCase().includes(searchText) ||
+    pet.location?.toLowerCase().includes(searchText);
 
-    return matchesSearch && matchesFilter;
-  });
+  // Type and status
+  const petType = pet.type?.toLowerCase();
+  const petStatus = pet.status?.toLowerCase();
 
+  let matchesFilter = true;
+
+  // Filter buttons
+  if (activeFilter === "Dogs") {
+    matchesFilter =
+      petType === "dog" ||
+      pet.breed?.toLowerCase().includes("dog");
+  }
+
+  else if (activeFilter === "Cats") {
+    matchesFilter =
+      petType === "cat" ||
+      pet.breed?.toLowerCase().includes("cat");
+  }
+
+  else if (activeFilter === "Available") {
+    matchesFilter = petStatus === "available";
+  }
+
+  return matchesSearch && matchesFilter;
+});
   const filteredFavorites = favoritePets.filter((pet) =>
     pet.name.toLowerCase().includes(search.toLowerCase())
   );

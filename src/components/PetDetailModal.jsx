@@ -57,9 +57,7 @@ function PetDetailModal({ pet, onClose }) {
             ))}
           </div>
 
-          {pet.status === "available" && (
-            <button style={s.adoptBtn}>🐾 Request Adoption</button>
-          )}
+          
         </div>
 
       </div>
@@ -134,19 +132,7 @@ const s = {
   },
   infoLabel: { fontSize: 11, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 },
   infoValue: { fontSize: 14, fontWeight: 600, color: "#0f172a", textTransform: "capitalize" },
-  adoptBtn: {
-    width: "100%",
-    padding: "14px",
-    background: "linear-gradient(135deg, #1e3a6e 0%, #2c4a7c 100%)",
-    color: "white",
-    border: "none",
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: 700,
-    cursor: "pointer",
-    fontFamily: "inherit",
-    boxShadow: "0 4px 12px rgba(30,58,110,0.3)",
-  },
+  
 };
 
 export default PetDetailModal;

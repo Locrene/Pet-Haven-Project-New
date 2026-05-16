@@ -212,18 +212,28 @@ function MissingPets() {
 
                     {isOwner ? (
                       <button
-                        className="btn btn-primary"
-                        onClick={() => openEditForm(report)}
-                      >
-                        Edit Report
-                      </button>
+  className="btn btn-primary"
+  style={{
+    color: "#ffffff",
+    background: "#1e3a6e",
+    fontWeight: "700",
+  }}
+  onClick={() => openEditForm(report)}
+>
+  Edit Report
+</button>
                     ) : (
                       <button
-                        className="btn btn-primary"
-                        onClick={() => messageReporter(report)}
-                      >
-                        Message Reporter
-                      </button>
+  className="btn btn-primary"
+  style={{
+    color: "#ffffff",
+    background: "#1e3a6e",
+    fontWeight: "700",
+  }}
+  onClick={() => messageReporter(report)}
+>
+  Message Reporter
+</button>
                     )}
                   </div>
                 </div>
