@@ -9,6 +9,11 @@ function MissingPets() {
 
   const currentUser = AuthService.getCurrentUser();
 
+  const isAdmin =
+    currentUser?.role === "ADMIN" ||
+    currentUser?.userType === "Admin" ||
+    currentUser?.email?.endsWith("@pawhaven.ph");
+
   const [form, setForm] = useState({
     petName: "",
     breed: "",
@@ -23,11 +28,13 @@ function MissingPets() {
     const res = await fetch("http://localhost:8080/api/missing-pets");
     const data = await res.json();
 
-    const visibleReports = data.filter(
-      (report) =>
-        report.status === "Accepted" ||
-        report.reporterEmail === currentUser?.email
-    );
+    const visibleReports = isAdmin
+      ? data
+      : data.filter(
+          (report) =>
+            report.status === "Accepted" ||
+            report.reporterEmail === currentUser?.email
+        );
 
     setReports(visibleReports);
   };
@@ -60,12 +67,12 @@ function MissingPets() {
   const openEditForm = (report) => {
     setEditingReport(report);
     setForm({
-      petName: report.petName,
-      breed: report.breed,
-      age: report.age,
-      location: report.location,
-      description: report.description,
-      image: report.image,
+      petName: report.petName || "",
+      breed: report.breed || "",
+      age: report.age || "",
+      location: report.location || "",
+      description: report.description || "",
+      image: report.image || "",
       petStatus: report.petStatus || "Missing",
     });
     setShowForm(true);
@@ -85,8 +92,12 @@ function MissingPets() {
     const payload = {
       ...form,
       image: form.image || "/images/default.jpg",
-      reporterName: `${currentUser.firstName} ${currentUser.lastName}`,
-      reporterEmail: currentUser.email,
+      reporterName: editingReport
+        ? editingReport.reporterName
+        : `${currentUser.firstName} ${currentUser.lastName}`,
+      reporterEmail: editingReport
+        ? editingReport.reporterEmail
+        : currentUser.email,
     };
 
     const url = editingReport
@@ -115,6 +126,20 @@ function MissingPets() {
       loadReports();
     } else {
       alert("Something went wrong.");
+    }
+  };
+
+  const updateReportStatus = async (id, status) => {
+    const res = await fetch(
+      `http://localhost:8080/api/missing-pets/${id}/status?status=${status}`,
+      { method: "PUT" }
+    );
+
+    if (res.ok) {
+      alert(`Report ${status}`);
+      loadReports();
+    } else {
+      alert("Failed to update report.");
     }
   };
 
@@ -149,9 +174,9 @@ function MissingPets() {
 
   const filteredReports = reports.filter(
     (report) =>
-      report.petName.toLowerCase().includes(search.toLowerCase()) ||
-      report.location.toLowerCase().includes(search.toLowerCase()) ||
-      report.breed.toLowerCase().includes(search.toLowerCase())
+      report.petName?.toLowerCase().includes(search.toLowerCase()) ||
+      report.location?.toLowerCase().includes(search.toLowerCase()) ||
+      report.breed?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -161,7 +186,9 @@ function MissingPets() {
           <div className="feed-header-top">
             <h1 className="feed-page-title">Missing Pets</h1>
             <p className="feed-page-subtitle">
-              Track and reunite lost pets across the community.
+              {isAdmin
+                ? "Admin view: review missing pet reports."
+                : "Track and reunite lost pets across the community."}
             </p>
           </div>
 
@@ -176,11 +203,13 @@ function MissingPets() {
               />
             </div>
 
-            <div className="action-buttons">
-              <button className="btn btn-primary" onClick={openAddForm}>
-                + Report Missing
-              </button>
-            </div>
+            {!isAdmin && (
+              <div className="action-buttons">
+                <button className="btn btn-primary" onClick={openAddForm}>
+                  + Report Missing
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -201,39 +230,48 @@ function MissingPets() {
                     <h3>{report.petName}</h3>
                     <p>{report.breed}</p>
                     <p>{report.location}</p>
-                    <p>Status: {report.petStatus}</p>
+                    <p>Pet Status: {report.petStatus}</p>
+                    <p>Review Status: {report.status}</p>
                     <p>Reported by: {report.reporterName}</p>
 
-                    {report.status === "Pending" && isOwner && (
-                      <p style={{ color: "#d97706" }}>
-                        Waiting for admin approval
-                      </p>
+                    {isAdmin && report.status === "Pending" && (
+                      <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                        <button
+                          className="btn btn-primary"
+                          style={{ background: "#16a34a", color: "white" }}
+                          onClick={() => updateReportStatus(report.id, "Accepted")}
+                        >
+                          Accept
+                        </button>
+
+                        <button
+                          className="btn btn-outline"
+                          style={{ background: "#dc2626", color: "white" }}
+                          onClick={() => updateReportStatus(report.id, "Declined")}
+                        >
+                          Decline
+                        </button>
+                      </div>
                     )}
 
-                    {isOwner ? (
+                    {!isAdmin && isOwner && (
                       <button
-  className="btn btn-primary"
-  style={{
-    color: "#ffffff",
-    background: "#1e3a6e",
-    fontWeight: "700",
-  }}
-  onClick={() => openEditForm(report)}
->
-  Edit Report
-</button>
-                    ) : (
+                        className="btn btn-primary"
+                        style={{ color: "#ffffff", background: "#1e3a6e", fontWeight: "700" }}
+                        onClick={() => openEditForm(report)}
+                      >
+                        Edit Report
+                      </button>
+                    )}
+
+                    {!isAdmin && !isOwner && (
                       <button
-  className="btn btn-primary"
-  style={{
-    color: "#ffffff",
-    background: "#1e3a6e",
-    fontWeight: "700",
-  }}
-  onClick={() => messageReporter(report)}
->
-  Message Reporter
-</button>
+                        className="btn btn-primary"
+                        style={{ color: "#ffffff", background: "#1e3a6e", fontWeight: "700" }}
+                        onClick={() => messageReporter(report)}
+                      >
+                        Message Reporter
+                      </button>
                     )}
                   </div>
                 </div>
@@ -242,7 +280,11 @@ function MissingPets() {
           ) : (
             <div className="empty-state">
               <h3>No missing pets found</h3>
-              <p>Use the report button to help reunite pets with owners.</p>
+              <p>
+                {isAdmin
+                  ? "No reports available for review."
+                  : "Use the report button to help reunite pets with owners."}
+              </p>
             </div>
           )}
         </div>
@@ -257,46 +299,13 @@ function MissingPets() {
 
             <h2>{editingReport ? "Edit Missing Pet" : "Report Missing Pet"}</h2>
 
-            <input
-              name="petName"
-              placeholder="Pet name"
-              value={form.petName}
-              onChange={handleChange}
-            />
+            <input name="petName" placeholder="Pet name" value={form.petName} onChange={handleChange} />
+            <input name="breed" placeholder="Breed" value={form.breed} onChange={handleChange} />
+            <input name="age" placeholder="Age" value={form.age} onChange={handleChange} />
+            <input name="location" placeholder="Last seen location" value={form.location} onChange={handleChange} />
+            <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} />
 
-            <input
-              name="breed"
-              placeholder="Breed"
-              value={form.breed}
-              onChange={handleChange}
-            />
-
-            <input
-              name="age"
-              placeholder="Age"
-              value={form.age}
-              onChange={handleChange}
-            />
-
-            <input
-              name="location"
-              placeholder="Last seen location"
-              value={form.location}
-              onChange={handleChange}
-            />
-
-            <input
-              name="image"
-              placeholder="Image URL"
-              value={form.image}
-              onChange={handleChange}
-            />
-
-            <select
-              name="petStatus"
-              value={form.petStatus}
-              onChange={handleChange}
-            >
+            <select name="petStatus" value={form.petStatus} onChange={handleChange}>
               <option value="Missing">Still Missing</option>
               <option value="Found">Found</option>
             </select>
